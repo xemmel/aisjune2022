@@ -108,6 +108,16 @@ public class HardcodedGreetService : IGreetService
     }
 }
 
+//DIHelper.cs
+
+    public static IServiceCollection AddMyFirstIsolatedFunctionApp(this IServiceCollection services)
+    {
+        services
+                .AddScoped<IGreetService, HardcodedGreetService>()
+                ;
+        return services;
+    }
+
 //HttpTrigger
 
     public class FirstHttpTrigger
