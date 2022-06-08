@@ -6,8 +6,8 @@
 
 
 ## Table of Content
-1. Logic apps
-2. Function Apps
+1. [Logic apps](#logic-apps)
+2. [Function Apps](#function-apps)
 
 
 
