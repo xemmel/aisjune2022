@@ -72,3 +72,73 @@ Verify that a message is sent to messageout when function is triggered
 ```
 
 [Back to top](#table-of-content)
+
+
+### Function App DI
+
+```csharp
+
+using Microsoft.Extensions.Hosting;
+var host = new HostBuilder()
+    .ConfigureFunctionsWorkerDefaults(
+        c => c.Services.AddMyFirstIsolatedFunctionApp()
+    )
+    .Build();
+
+host.Run();
+
+
+//IGreetService.cs
+
+
+
+public interface IGreetService
+{
+    Task<string> GetGreetingAsync(CancellationToken cancellationToken = default);
+}
+
+
+//HardcodedGreetService.cs
+
+public class HardcodedGreetService : IGreetService
+{
+    public async  Task<string> GetGreetingAsync(CancellationToken cancellationToken = default)
+    {
+        return $"Hello from DI";
+    }
+}
+
+//HttpTrigger
+
+    public class FirstHttpTrigger
+    {
+        private readonly ILogger _logger;
+        private readonly IGreetService _greetService;
+
+        public FirstHttpTrigger(ILoggerFactory loggerFactory, IGreetService greetService)
+        {
+            _logger = loggerFactory.CreateLogger<FirstHttpTrigger>();
+            _greetService = greetService;
+        }
+
+        [Function("FirstHttpTrigger")]
+        public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
+        {
+            _logger.LogInformation("C# HTTP trigger function processed a request.");
+
+            var response = req.CreateResponse(HttpStatusCode.OK);
+            response.Headers.Add("Content-Type", "text/plain; charset=utf-8");
+
+            string greeting = await _greetService.GetGreetingAsync();
+            response.WriteString(greeting);
+
+            return response;
+        }
+    }
+
+``` 
+
+
+
+
+[Back to top](#table-of-content)
