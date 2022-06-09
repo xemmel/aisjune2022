@@ -8,8 +8,17 @@
 ## Table of Content
 1. [Logic apps](#logic-apps)
 2. [Function Apps](#function-apps)
+3. [Deployment](#deployment)
 
 
+### GIT PULL
+
+```powershell
+
+git clone https://github.com/xemmel/aisjune2022.git
+
+
+```
 
 ## Logic Apps
 
@@ -149,6 +158,20 @@ public class HardcodedGreetService : IGreetService
 ``` 
 
 
+
+
+[Back to top](#table-of-content)
+
+## Deployment
+
+```powershell
+
+$rgName = "rg-your-resourceGroupName";
+az group create -n $rgName -l westeurope
+
+az deployment group create --resource-group $rgName --template-file .\Templates\logging.bicep --parameters appName=thebrandnewapp --parameters env=test
+
+```
 
 
 [Back to top](#table-of-content)
