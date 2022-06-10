@@ -9,7 +9,7 @@
 1. [Logic apps](#logic-apps)
 2. [Function Apps](#function-apps)
 3. [Deployment](#deployment)
-
+4. [Notes](#notes)
 
 ### GIT PULL
 
@@ -174,4 +174,166 @@ az deployment group create --resource-group $rgName --template-file .\Templates\
 ```
 
 
+[Back to top](#table-of-content)
+
+### Notes
+
+```
+Container = folder
+Blob = filer
+
+
+
+OAUTH2
+
+
+Token
+
+
+Http kald:
+    Header:
+      Authorization: Bearer [token]
+
+
+
+```
+
+#### Command line tools
+
+```
+
+Function Apps (On-prem, rigtig code)
+
+function app cli
+  -> Logged in (AZ Powershell ,AZ CLI)
+
+
+
+(Command line Azure)
+
+Az powershell -> Windows
+Az CLI -> Linux, MAC
+
+
+
+Powershell
+
+Get-AzResourceGroup
+New-AzResourceGroup
+
+CLI:
+
+az group list
+az group create -ff
+
+Login (CLI)
+
+az login (ÅBNER DEFAULT!!! Browseren)
+az login --use-device-code (ff)
+
+Check om man er logget ind:
+
+az account show
+
+List subscription:
+
+az account list -o table
+
+Change subscription:
+
+
+az account set -s 4bf83
+
+```
+
+[Back to top](#table-of-content)
+
+#### Logic app syntax
+
+```
+
+- Referére Trigger data TriggerOutputs()  -> TriggerBody()
+
+- Ref -> Tidligere action outputs('[action name]') -> body('[action name]')
+
+
+TriggerBody()['name']['fd']?['rrr']
+
+
+Logic app syntax: 
+"@TriggerBody()['name']"
+
+"Hello @{TriggerBody()['name']}"
+
+
+Compose -> const
+Variable -> variable !!!!(NOT THREAD-SAFE) -> Foreach ()
+
+
+```
+
+[Back to top](#table-of-content)
+
+#### Function app CLI
+
+```
+Local Function App
+
+Logged in in AZ!!!
+
+az login (ÅBNER DEFAULT!!! Browseren)
+az login --use-device-code (ff)
+
+- New Folder
+
+Create new Function App Project:
+
+func init [projectName] --worker-runtime dotnetIsolated
+
+
+Create HttpTrigger (IN PROJECT FOLDER)
+
+func new --template HttpTrigger --name FirstHttpTrigger
+
+
+func start
+
+Get Url
+
+Call from Postman
+
+Create QueueTrigger
+
+func new --template QueueTrigger --name FirstQueueTrigger
+
+        [Function("FirstQueueTrigger")]
+        public voidRun([QueueTrigger("onprem", Connection = "thecustomStorageConnection")] string myQueueItem)
+        {
+            _logger.LogInformation($"C# Queue trigger function processed: {myQueueItem}");
+            
+        } 
+
+local.settings.json
+
+"thecustomStorageConnection" : "connectionString" -> Storage Account -> Access Keys -> Show ConnectionString
+
+
+func start
+
+Submit to "onprem" queue, see console log
+
+```
+
+[Back to top](#table-of-content)
+
+#### Spliton
+
+```
+
+
+                "kind": "Http",
+                "splitOn" : "@triggerBody()",
+                "type": "Request"
+
+```
 [Back to top](#table-of-content)
