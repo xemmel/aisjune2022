@@ -10,7 +10,7 @@
 2. [Function Apps](#function-apps)
 3. [Deployment](#deployment)
 4. [Notes](#notes)
-
+5. [Monitor](#monitor)
 ### GIT PULL
 
 ```powershell
@@ -336,4 +336,48 @@ Submit to "onprem" queue, see console log
                 "type": "Request"
 
 ```
+
+#### Bicep/ARM deploy
+
+
+```powershell
+
+az deployment group create --resource-group $rgName --template-file .\Templates\sa.bicep --parameters .\Parameters\Prod\storageaccount.json
+
+```
+[Back to top](#table-of-content)
+
+
+### Monitor
+
+```
+
+AppRequests
+| where TimeGenerated > ago(12h)
+| summarize count() by bin(TimeGenerated,10m), tostring(Success)
+| render barchart 
+
+
+AppRequests
+| where TimeGenerated > ago(2h)
+| summarize count() by bin(TimeGenerated,10m)
+| render barchart 
+
+
+AppRequests
+| where TimeGenerated > ago(1h)
+| where Success == false
+| project TimeGenerated, Name, Success, DurationMs, OperationId
+| order by TimeGenerated desc
+
+
+AppExceptions
+| where OperationId == 'cfe6e6c8f6d4cd29902e75d28c7e9a3e'
+
+
+AppTraces
+| where OperationId == 'cfe6e6c8f6d4cd29902e75d28c7e9a3e'
+
+```
+
 [Back to top](#table-of-content)

@@ -1,0 +1,33 @@
+trigger:
+- master
+
+variables:
+- group: mytestgroup
+  
+stages:
+- stage: test
+  variables:
+    env: test
+    rgName: 'rg-$(appName)-$(env)'
+  jobs:
+  - job: rg
+    displayName: 'Resource Group'
+    steps:
+      - task: AzureCLI@2
+        inputs:
+          azureSubscription: $(testsubscription)
+          scriptType: pscore
+          scriptLocation: inlineScript
+          inlineScript: |
+            az group create --resource-group $(rgName) --location $(location)
+  - job: deploy
+    dependsOn: rg
+    displayName: 'Infrastructure'
+    steps:
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: $(testsubscription)
+        scriptType: pscore
+        scriptLocation: inlineScript
+        inlineScript: |
+          az deployment group create --resource-group $(rgName) --template-file './Templates/logging.bicep' --parameters appName=$(appName) --parameters env=$(env)
