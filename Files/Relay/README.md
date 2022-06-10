@@ -78,7 +78,7 @@ TokenProvider GetTokenProvider()
     return result;
 }
 
-```csharp
+```
 
 ## Request.cs
 
